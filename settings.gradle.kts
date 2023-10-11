@@ -10,8 +10,6 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
 }
 
-rootProject.name = "kotlin-abi-before-after"
-include("app")
-include("before")
-include("after")
-include("caller")
+rootProject.name = "kotlin-abi-inline-lambda"
+include("runner")
+include("target")

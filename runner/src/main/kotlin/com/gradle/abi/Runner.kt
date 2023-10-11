@@ -27,13 +27,14 @@ class Snapshotter {
 fun main() {
     val snapshotter = Snapshotter()
 
-    snapshotter.snapshot("caller/build/classes/kotlin/main").forEach {
+    snapshotter.snapshot("../target/build/classes/kotlin/main").forEach {
         if (it.value is AccessibleClassSnapshot) {
-            println("${it.key} -->${(it.value as AccessibleClassSnapshot).classAbiHash}")
+            println("ABI fingerprint of ${it.key} is: ${(it.value as AccessibleClassSnapshot).classAbiHash}")
         } else {
-            println("${it.key} -->${it.value}")
+            println("ABI fingerprint of ${it.key} is: INACCESSIBLE")
         }
     }
 
-    Caller().call()
+    print("Calling the function yields: ")
+    InlineLambda().foo()
 }
