@@ -1,4 +1,4 @@
-# kotlin-abi-before-after
+# kotlin-abi-inline-lambda
 
 This simple reproducer attempt to showcase a problem with determining the ABI fingerprint of a class like the following. 
 
@@ -13,7 +13,7 @@ class InlineLambda {
 }
 ```
 
-More specifically: if the `aggregate` lambda is changed in the `foo()` function, the ABI fingerprint of the class should change also.
+More specifically: if the `aggregate` lambda is changed in the `foo()` function, the ABI fingerprint of the class should also change.
 The reasoning is that other classes using the `foo()` function will need to be recompiled, due to `foo()` being an inline function.
 
 To demonstrate run the reproducer (`./gradlew run --rerun-tasks`), you get:
@@ -24,7 +24,7 @@ ABI fingerprint of com/gradle/abi/InlineLambda.class is: -5224924079613941
 Calling the function yields: foo = 4
 ```
 
-Edit line 6 in `InlineLambda` (project `target`), replace `x + y` with `x - y`.
+Edit the `aggregate` function in `InlineLambda` (project `target`), replace `x + y` with `x - y`.
 
 Run the reproducer again (`./gradlew run --rerun-tasks`), you get:
 
