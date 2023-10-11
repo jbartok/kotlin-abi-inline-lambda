@@ -33,3 +33,18 @@ ABI fingerprint of com/gradle/abi/InlineLambda$foo$aggregate$1.class is: INACCES
 ABI fingerprint of com/gradle/abi/InlineLambda.class is: -5224924079613941
 Calling the function yields: foo = 0
 ```
+
+> **_NOTE:_** One weird thing I noticed is that if I don't just edit the aggregate function, but use comments, 
+> then the result is different.
+>
+> So switching this
+> ```kotlin
+> val aggregate: (Int, Int) -> Int = { x, y -> x + y }
+> // val aggregate: (Int, Int) -> Int = { x, y -> x - y }
+> ```
+> to
+> ```kotlin
+> // val aggregate: (Int, Int) -> Int = { x, y -> x + y }
+> val aggregate: (Int, Int) -> Int = { x, y -> x - y }
+> ```
+> behaves differently than editing. That can't be good...
