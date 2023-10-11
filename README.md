@@ -1,6 +1,22 @@
 # kotlin-abi-before-after
 
-Run the reproducer: `./gradlew run --rerun-tasks`, you get:
+This simple reproducer attempt to showcase a problem with determining the ABI fingerprint of a class like the following. 
+
+```kotlin
+class InlineLambda {
+
+    inline fun foo() {
+        val aggregate: (Int, Int) -> Int = { x, y -> x + y }
+        println("foo = " + aggregate(2, 2))
+    }
+
+}
+```
+
+More specifically: if the `aggregate` lambda is changed in the `foo()` function, the ABI fingerprint of the class should change also.
+The reasoning is that other classes using the `foo()` function will need to be recompiled, due to `foo()` being an inline function.
+
+To demonstrate run the reproducer (`./gradlew run --rerun-tasks`), you get:
 
 ```
 ABI fingerprint of com/gradle/abi/InlineLambda$foo$aggregate$1.class is: INACCESSIBLE
@@ -10,13 +26,10 @@ Calling the function yields: foo = 4
 
 Edit line 6 in `InlineLambda` (project `target`), replace `x + y` with `x - y`.
 
-Run the reproducer: `./gradlew run --rerun-tasks`, you get:
+Run the reproducer again (`./gradlew run --rerun-tasks`), you get:
 
 ```
 ABI fingerprint of com/gradle/abi/InlineLambda$foo$aggregate$1.class is: INACCESSIBLE
 ABI fingerprint of com/gradle/abi/InlineLambda.class is: -5224924079613941
 Calling the function yields: foo = 0
 ```
-
-The problem is that the ABI fingerprint for the `InlineLambda` class is the same in both cases.
-We believe it shouldn't be, it should be different, because classes using the inline function `foo()` from it need to be recompiled.
